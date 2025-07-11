@@ -14,11 +14,22 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 import pymysql
+from distutils.util import strtobool
 pymysql.install_as_MySQLdb()
 load_dotenv()
 
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG') == 'True'
+# ----------------------------------------------------------------------------
+# Environment & configuration helpers
+# ----------------------------------------------------------------------------
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'insecure-secret-key')
+
+# DEBUG: evaluates to True when DJANGO_DEBUG is one of ["1", "true", "yes"], case-insensitive
+DEBUG = bool(strtobool(os.getenv('DJANGO_DEBUG', 'False')))
+
+# Hosts allowed to connect, comma-separated string in env → list[str]
+ALLOWED_HOSTS_ENV = os.getenv('DJANGO_ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS_ENV.split(',') if host.strip()]
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -27,12 +38,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j#&)fm4#799%#$rm3gtm33ut_^q$e78qdi5-^94##o49+c#d_l'
+# SECRET_KEY = 'django-insecure-j#&)fm4#799%#$rm3gtm33ut_^q$e78qdi5-^94##o49+c#d_l'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
 
 
 # Application definition
