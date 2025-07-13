@@ -28,8 +28,4 @@ urlpatterns = [
     path('kakao/', include('kakao.urls')),  # kakao url 연결
     path('mypage/', include('mypage.urls')),  # mypage url 연결
     path('dashboard/', include('dashboard.urls')),  # dashboard url 연결
-]
-
-# DEBUG 모드일 때만 static 파일 서비스
-if settings.DEBUG:
-    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+] + static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
