@@ -16,6 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,3 +29,7 @@ urlpatterns = [
     path('mypage/', include('mypage.urls')),  # mypage url 연결
     path('dashboard/', include('dashboard.urls')),  # dashboard url 연결
 ]
+
+# DEBUG 모드에서 static 파일 서빙
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
