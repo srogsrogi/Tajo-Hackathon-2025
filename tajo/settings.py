@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
@@ -37,6 +37,15 @@ ALLOWED_HOSTS = [
     "www.taewojo.site",
     "taewojo.site"
 ]
+
+# Security settings for production
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
 
 
 # Application definition
@@ -143,7 +152,11 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
     ]
 
-# STATIC_ROOT = BASE_DIR / "staticfiles"
+# Static files for production
+if not DEBUG:
+    STATIC_ROOT = BASE_DIR / "staticfiles"
+else:
+    STATIC_ROOT = None
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
