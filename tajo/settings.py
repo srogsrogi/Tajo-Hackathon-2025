@@ -17,8 +17,7 @@ import pymysql
 pymysql.install_as_MySQLdb()
 load_dotenv()
 
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG') == 'True'
+SECRET_KEY = 'django-insecure-test-key-for-development-only-12345'
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
