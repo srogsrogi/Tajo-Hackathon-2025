@@ -1,0 +1,46 @@
+worker_processes 1;
+
+events { 
+    worker_connections 1024; 
+}
+
+http {
+    include       mime.types;
+    default_type  application/octet-stream;
+    sendfile        on;
+    keepalive_timeout  65;
+
+    server {
+        listen 80;
+        server_name taewojo.site www.taewojo.site;
+        charset utf-8;
+
+        # Trust the load balancer's forwarded headers
+        real_ip_header X-Forwarded-For;
+        set_real_ip_from 10.0.0.0/8;
+        set_real_ip_from 172.16.0.0/12;
+        set_real_ip_from 192.168.0.0/16;
+
+        # 정적 파일 라우팅
+        location /static/ {
+            alias /app/staticfiles/;
+            expires 30d;
+            add_header Cache-Control "public";
+        }
+
+        # (필요시) 미디어 파일 라우팅 예시
+        # location /media/ {
+        #     alias /app/media/;
+        # }
+
+        # 모든 요청을 Django(Gunicorn)으로 프록시
+        location / {
+            proxy_pass http://127.0.0.1:8000;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Host $server_name;
+        }
+    }
+}

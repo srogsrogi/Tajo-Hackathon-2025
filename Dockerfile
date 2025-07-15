@@ -11,23 +11,30 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . .
 
-# --- [여기서부터 추가!] ---
-# 1. nginx 설치 (apt)
-RUN apt-get update && apt-get install -y nginx && rm -rf /var/lib/apt/lists/*
+# nginx 및 certbot 설치 (SSL 지원)
+RUN apt-get update && apt-get install -y \
+    nginx \
+    certbot \
+    python3-certbot-nginx \
+    && rm -rf /var/lib/apt/lists/*
 
-# 2. nginx.conf를 컨테이너에 복사 (프로젝트 루트에 nginx.conf 파일 만들어놔야 함)
-COPY nginx.conf /etc/nginx/nginx.conf
+# certbot을 위한 디렉토리 생성
+RUN mkdir -p /var/www/certbot
 
-# 3. staticfiles 디렉토리도 컨테이너에 복사된 상태여야 함 (collectstatic 하면 ok)
-# 필요시 아래 추가
-# RUN python manage.py collectstatic --noinput
+# nginx 설정 파일 복사 (SSL 설정 버전)
+COPY nginx-ssl.conf /etc/nginx/nginx-ssl.conf
 
-# 4. 포트 노출 (nginx 기본 80포트 사용)
-EXPOSE 80
+# 환경 변수 설정 (기본값)
+ENV DOMAIN=taewojo.site
+ENV LETSENCRYPT_EMAIL=your-email@example.com
+ENV SSL_MODE=auto
 
-# 5. nginx & gunicorn을 동시에 실행하는 sh 스크립트 준비 (entrypoint.sh)
+# 80, 443 포트 모두 노출
+EXPOSE 80 443
+
+# entrypoint 스크립트 복사 및 실행 권한 부여
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# 6. 컨테이너 실행 시 entrypoint.sh 실행
+# 컨테이너 실행 시 entrypoint.sh 실행
 CMD ["/entrypoint.sh"]

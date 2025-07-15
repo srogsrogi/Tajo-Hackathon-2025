@@ -8,6 +8,14 @@
       {
         "ContainerPort": 8000,
         "HostPort": 8000
+      },
+      {
+        "ContainerPort": 80,
+        "HostPort": 80
+      },
+      {
+        "ContainerPort": 443,
+        "HostPort": 443
       }
     ],
     "Environment": {
@@ -15,8 +23,20 @@
       "DATABASE_USER": "$DATABASE_PROD_USER",
       "DATABASE_PASSWORD": "$DATABASE_PROD_PASSWORD",
       "DATABASE_NAME": "$DATABASE_PROD_NAME",
-      "DATABASE_PORT": "$DATABASE_PROD_PORT"
+      "DATABASE_PORT": "$DATABASE_PROD_PORT",
+      "DOMAIN": "taewojo.site",
+      "LETSENCRYPT_EMAIL": "$LETSENCRYPT_EMAIL",
+      "SSL_MODE": "auto"
     },
-    "Volumes": [],
+    "Volumes": [
+      {
+        "HostDirectory": "/etc/letsencrypt",
+        "ContainerDirectory": "/etc/letsencrypt"
+      },
+      {
+        "HostDirectory": "/var/lib/letsencrypt",
+        "ContainerDirectory": "/var/lib/letsencrypt"
+      }
+    ],
     "Logging": "/var/log/nginx"
   }
