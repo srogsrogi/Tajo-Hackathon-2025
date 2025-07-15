@@ -147,3 +147,8 @@ STATICFILES_DIRS = [BASE_DIR / "static"]              # <- 소스 static 파일
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://taewojo.site",
+    "https://www.taewojo.site",
+]
