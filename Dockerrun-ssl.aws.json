@@ -1,0 +1,31 @@
+{
+    "AWSEBDockerrunVersion": "1",
+    "Image": {
+      "Name": "yejin99/tajo-web:ssl-latest",
+      "Update": "true"
+    },
+    "Ports": [
+      {
+        "ContainerPort": 80,
+        "HostPort": 80
+      },
+      {
+        "ContainerPort": 443,
+        "HostPort": 443
+      }
+    ],
+    "Environment": {
+      "DATABASE_HOST": "$DATABASE_PROD_HOST",
+      "DATABASE_USER": "$DATABASE_PROD_USER",
+      "DATABASE_PASSWORD": "$DATABASE_PROD_PASSWORD",
+      "DATABASE_NAME": "$DATABASE_PROD_NAME",
+      "DATABASE_PORT": "$DATABASE_PROD_PORT"
+    },
+    "Volumes": [
+      {
+        "HostDirectory": "/etc/letsencrypt",
+        "ContainerDirectory": "/etc/letsencrypt"
+      }
+    ],
+    "Logging": "/var/log/nginx"
+  }
